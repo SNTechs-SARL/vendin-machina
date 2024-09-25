@@ -6,10 +6,16 @@ require('dotenv').config()
 const pb = new PocketBase(process.env.PB_URL)
 
 app.get('/products', async (req, res) => {
-  res.send(await pb.collection('products').getFullList())
+	const products = (await pb.collection('products').getFullList()).map(p => {
+		p.thumbnail = `${process.env.PB_URL}/api/files/products/${p.id}/${p.thumbnail}`
+		return p
+	})
+	console.log(products[0])
+
+  res.send(products)
 })
 
-var server = app.listen(port, async() => {
+app.listen(port, async() => {
 	_= await pb.admins.authWithPassword(process.env.EMAIL, process.env.PASSWORD)
 	if(!pb.authStore.isValid) {
 		console.log('Invalid PocketBase Authentification')
