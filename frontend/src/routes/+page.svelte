@@ -1,2 +1,10 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script>
+	import VendingMachine from "../components/VendingMachine.svelte";
+
+</script>
+<div class="h-screen bg-cyan-200">
+    <VendingMachine/>
+</div>
+<style>
+    
+</style>
