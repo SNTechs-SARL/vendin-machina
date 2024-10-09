@@ -11,7 +11,8 @@ const tmp = async() => {
     }
         console.log("waiting")
 
-    const device = await adapter.waitDevice('a8:61:0a:af:03:ba')
+    const device = await adapter.waitDevice('b0:d2:78:26:fa:f3')
+        console.log("connected")
     await device.connect()
         console.log("connected")
     const gattServer = await device.gatt()
