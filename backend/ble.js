@@ -18,7 +18,7 @@ const tmp = async() => {
     if(device.isConnected){
         const gattServer = await device.gatt()
         const service1 = await gattServer.services
-        console.log(service1)
+        console.log(JSON.stringify(await gattServer.services()))
         /* 
         const characteristic1 = await service1.getCharacteristic('uuid')
         await characteristic1.writeValue(Buffer.from("Hello world"))
