@@ -4,6 +4,17 @@ const port = 3000
 const PocketBase = require('pocketbase/cjs')
 require('dotenv').config()
 const pb = new PocketBase(process.env.PB_URL)
+const ble = require('./ble')
+
+ble.listen(
+    function (clientAddress) {
+        console.log("Client: " + clientAddress + " connected!")
+    },
+    function (error) {
+        console.error("Something wrong happened!:" + error)
+    },
+    { uuid: UUID, channel: CHANNEL }
+)
 
 app.get('/products', async (req, res) => {
 	const products = (await pb.collection('products').getFullList()).map(p => {
