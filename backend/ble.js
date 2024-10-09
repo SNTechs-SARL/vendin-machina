@@ -1,21 +1,20 @@
-var server = new (require("bluetooth-serial-port").BluetoothSerialPortServer)()
+const {createBluetooth} = require('node-ble')
+const {bluetooth, destroy} = createBluetooth()
+const adapter = await bluetooth.defaultAdapter()
 
-var CHANNEL = 10 // My service channel. Defaults to 1 if omitted.
-var UUID = "38e851bc-7144-44b4-9cd8-80549c6f2912" // My own service UUID. Defaults to '1101' if omitted
 
-server.on("data", function (buffer) {
-    console.log("Received data from client: " + buffer)
 
-    // ...
+const tmp = async() => {
+    if (! await adapter.isDiscovering())
+    await adapter.startDiscovery()
 
-    console.log("Sending data to the client")
-    server.write(Buffer.from("..."), function (err, bytesWritten) {
-        if (err) {
-            console.log("Error!")
-        } else {
-            console.log("Send " + bytesWritten + " to the client!")
-        }
-    })
-})
-
-module.exports = server
+    const device = await adapter.waitDevice('a8:61:0a:af:03:ba')
+    await device.connect()
+    const gattServer = await device.gatt()
+    const service1 = await gattServer.getPrimaryService('uuid')
+    const characteristic1 = await service1.getCharacteristic('uuid')
+    await characteristic1.writeValue(Buffer.from("Hello world"))
+    const buffer = await characteristic1.readValue()
+    console.log(buffer)
+}
+module.exports = tmp

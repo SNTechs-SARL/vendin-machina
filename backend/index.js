@@ -5,17 +5,7 @@ const PocketBase = require('pocketbase/cjs')
 require('dotenv').config()
 const pb = new PocketBase(process.env.PB_URL)
 const ble = require('./ble')
-
-ble.listen(
-    function (clientAddress) {
-        console.log("Client: " + clientAddress + " connected!")
-    },
-    function (error) {
-        console.error("Something wrong happened!:" + error)
-    },
-    { uuid: UUID, channel: CHANNEL }
-)
-
+ble()
 app.get('/products', async (req, res) => {
 	const products = (await pb.collection('products').getFullList()).map(p => {
 		p.thumbnail = `${process.env.PB_URL}/api/files/products/${p.id}/${p.thumbnail}`
