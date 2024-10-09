@@ -15,11 +15,13 @@ const tmp = async() => {
         console.log("connected")
     await device.connect()
         console.log("connected")
-    const gattServer = await device.gatt()
-    const service1 = await gattServer.getPrimaryService('uuid')
-    const characteristic1 = await service1.getCharacteristic('uuid')
-    await characteristic1.writeValue(Buffer.from("Hello world"))
-    const buffer = await characteristic1.readValue()
-    console.log(buffer)
+    if(device.isConnected){
+        const gattServer = await device.gatt()
+        const service1 = await gattServer.getPrimaryService('uuid')
+        const characteristic1 = await service1.getCharacteristic('uuid')
+        await characteristic1.writeValue(Buffer.from("Hello world"))
+        const buffer = await characteristic1.readValue()
+        console.log(buffer)
+    }
 }
 module.exports = tmp
