@@ -6,18 +6,28 @@
     }
 </style>
 
-<script>
+<script lang="ts">
 	import Button from "./Button.svelte";
 
     let command = '';
+    let buyTimeout: number;
 
     const handleCommand = (e) => {
+        if (buyTimeout) clearTimeout(buyTimeout)
+        
         if (e.detail.toString() === "C") {
             command = "";
             return;
         }
+
         if (command.length >= 3) return;
         command += e.detail.toString();
+
+        buyTimeout = setTimeout(() => buyItem(), 1500);
+    }
+
+    const buyItem = () => {
+        console.log("Buying", command)
     }
 
     const numpadGenerator = () => {
