@@ -1,7 +1,29 @@
 const {createBluetooth} = require('node-ble')
 const {bluetooth, destroy} = createBluetooth()
 
+class VendingMachineManager {
+    // corresponds to 0000xxxx-0000-1000-8000-00805F9B34FB where xxxx is the specified address in the arduino program
+    STATE_CHAR_UID = "0000FFE1-0000-1000-8000-00805F9B34FB"
+    CHARGE_ATT_UID = "0000FFE0-0000-1000-8000-00805F9B34FB"
+    
+    // ble == const adapter = await bluetooth.defaultAdapter()
+    constructor(mac, ble) {
+        this.ble = ble
+        this.mac = mac
+    }
 
+    async connect() {
+        if (! await this.ble.isDiscovering()){
+            await adapter.startDiscovery()
+        }
+
+        this.device = await adapter.waitDevice(this.mac)
+        await this.device.connect()
+        this.gattServer = await device.gatt()
+    }
+
+    async 
+}
 
 const tmp = async() => {
     const adapter = await bluetooth.defaultAdapter()
