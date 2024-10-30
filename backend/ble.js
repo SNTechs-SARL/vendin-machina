@@ -41,7 +41,7 @@ const tmp = async() => {
         const gattServer = await device.gatt()
         const service1 = await gattServer.getPrimaryService('0000ffe0-0000-1000-8000-00805f9b34fb')
         console.log(JSON.stringify(await service1.characteristics()))
-        const characteristic1 = await service1.characteristics('0000ffe1-0000-1000-8000-00805f9b34fb')
+        const characteristic1 = await service1.getCharacteristic('0000ffe1-0000-1000-8000-00805f9b34fb')
         await characteristic1.writeValue(Buffer.from("10"))
         /* 
         const characteristic1 = await service1.getCharacteristic('uuid')
