@@ -26,9 +26,6 @@
  * ```
  */
 declare module '$env/static/private' {
-	export const PB_URL: string;
-	export const EMAIL: string;
-	export const PASSWORD: string;
 	export const ALLUSERSPROFILE: string;
 	export const APPDATA: string;
 	export const CHROME_CRASHPAD_PIPE_NAME: string;
@@ -137,9 +134,6 @@ declare module '$env/static/public' {
  */
 declare module '$env/dynamic/private' {
 	export const env: {
-		PB_URL: string;
-		EMAIL: string;
-		PASSWORD: string;
 		ALLUSERSPROFILE: string;
 		APPDATA: string;
 		CHROME_CRASHPAD_PIPE_NAME: string;
