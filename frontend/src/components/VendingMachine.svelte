@@ -28,9 +28,10 @@
 
         if(success) {
             const item = items.find((i) => i.vending_id === Number(command));
-            console.log(item)
             boughtItem = item;
+            return
         }
+        command = "ERROR";
     }
 
     const numpadGenerator = () => {
@@ -52,7 +53,7 @@
         {#each items as item}
             <div>
                 <div class="h-[85%] w-[150px] flex justify-center items-end">
-                    <img src={item.thumbnail} class="w-full"/>
+                    <img src={item.thumbnail} class="w-1/2 h-auto" alt="item"/>
                 </div>
                 <div class="h-[15%] w-[150px] flex justify-center items-center">
                     <div class="w-1/3 h-full bg-white flex items-center justify-center text-xl font-bold">

@@ -20,10 +20,18 @@ app.get('/products', async (req, res) => {
 })
 
 app.post('/buy/:product_id', async (req, res) => {
+	let success = false;
 	// TODO FIND ITEM
 	const delay = ms => new Promise(res => setTimeout(res, ms));
   	delay(5000)
-	res.send({success: true})
+	try {
+		const product = (await pb.collection('products').getFirstListItem(`vending_id = ${req.params.product_id}`));
+		success = true;
+	} catch (e) {
+		console.log("Item not found")
+	}
+	
+	res.send({success})
 })
 
 app.listen(port, async() => {
