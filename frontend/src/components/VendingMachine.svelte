@@ -24,11 +24,13 @@
     }
 
     const buyItem = async() => {
-        const success = await axios.post(`http://localhost:3000/buy/${command}`).then((resp) => resp.data.success);
+        const data = await axios.post(`http://localhost:3000/buy/${command}`).then((resp) => resp.data);
 
-        if(success) {
+        if(data.success) {
             const item = items.find((i) => i.vending_id === Number(command));
             boughtItem = item;
+            console.log(data.products)
+            items = data.products;
             return
         }
         command = "ERROR";
