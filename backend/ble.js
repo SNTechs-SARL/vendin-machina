@@ -1,5 +1,5 @@
 const {createBluetooth} = require('node-ble')
-const {bluetooth, destroy} = createBluetooth()
+const {bluetooth} = createBluetooth()
 
 class VendingMachineManager {
     // corresponds to 0000xxxx-0000-1000-8000-00805F9B34FB where xxxx is the specified address in the arduino program
@@ -25,7 +25,7 @@ class VendingMachineManager {
     async 
 }
 const delay = ms => new Promise(res => setTimeout(res, ms));
-const tmp = async() => {
+const pay = async(amount) => {
     const adapter = await bluetooth.defaultAdapter()
     if (! await adapter.isDiscovering()){
         console.log("not discovering")
@@ -42,12 +42,12 @@ const tmp = async() => {
         const service1 = await gattServer.getPrimaryService('0000ffe0-0000-1000-8000-00805f9b34fb')
         console.log(JSON.stringify(await service1.characteristics()))
         const characteristic1 = await service1.getCharacteristic('0000ffe1-0000-1000-8000-00805f9b34fb')
-        await characteristic1.writeValue(Buffer.from("10"))
-        while(Buffer.compare(Buffer.from("10"), await characteristic1.readValue()) == 0) {
+        await characteristic1.writeValue(Buffer.from(amount.toString()))
+        while(Buffer.compare(Buffer.from(amount.toString()), await characteristic1.readValue()) == 0) {
             delay(10000)
             console.log("" + await characteristic1.readValue())
         }
         console.log("payed");
     }
 }
-module.exports = tmp
+module.exports = pay
