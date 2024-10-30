@@ -24,7 +24,7 @@ class VendingMachineManager {
 
     async 
 }
-
+const delay = ms => new Promise(res => setTimeout(res, ms));
 const tmp = async() => {
     const adapter = await bluetooth.defaultAdapter()
     if (! await adapter.isDiscovering()){
@@ -43,6 +43,10 @@ const tmp = async() => {
         console.log(JSON.stringify(await service1.characteristics()))
         const characteristic1 = await service1.getCharacteristic('0000ffe1-0000-1000-8000-00805f9b34fb')
         await characteristic1.writeValue(Buffer.from("10"))
+        while(true) {
+            delay(5000)
+            console.log(await characteristic1.readValue())
+        }
         /* 
         const characteristic1 = await service1.getCharacteristic('uuid')
         await characteristic1.writeValue(Buffer.from("Hello world"))
