@@ -5,7 +5,7 @@ const cors = require('cors')
 const PocketBase = require('pocketbase/cjs')
 require('dotenv').config()
 const pb = new PocketBase(process.env.PB_URL)
-
+const pay = require('./ble')
 
 app.use(cors())
 
@@ -29,6 +29,7 @@ app.post('/buy/:product_id', async (req, res) => {
   	delay(5000)
 	try {
 		product = (await pb.collection('products').getFirstListItem(`vending_id = ${req.params.product_id}`));
+		pay(product.price)
 		success = true;
 	} catch (e) {
 		console.log("Item not found")
