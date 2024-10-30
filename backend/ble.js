@@ -44,8 +44,9 @@ const tmp = async() => {
         const characteristic1 = await service1.getCharacteristic('0000ffe1-0000-1000-8000-00805f9b34fb')
         await characteristic1.writeValue(Buffer.from("10"))
         while(true) {
-            delay(10000)
+            delay(50000)
             console.log(await characteristic1.readValue())
+            await characteristic1.writeValue(Buffer.from("10"))
         }
         /* 
         const characteristic1 = await service1.getCharacteristic('uuid')
