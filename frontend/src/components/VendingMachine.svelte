@@ -1,12 +1,13 @@
 <script lang="ts">
+	import axios from "axios";
 	import Button from "./Button.svelte";
 
     export let items;
 
-    console.log(items)
-
     let command = '';
     let buyTimeout: number;
+
+    let boughtItem;
 
     const handleCommand = (e) => {
         if (buyTimeout) clearTimeout(buyTimeout)
@@ -22,8 +23,14 @@
         buyTimeout = setTimeout(() => buyItem(), 1500);
     }
 
-    const buyItem = () => {
-        console.log("Buying", command)
+    const buyItem = async() => {
+        const success = await axios.post(`http://localhost:3000/buy/${command}`).then((resp) => resp.data.success);
+
+        if(success) {
+            const item = items.find((i) => i.vending_id === Number(command));
+            console.log(item)
+            boughtItem = item;
+        }
     }
 
     const numpadGenerator = () => {
@@ -32,23 +39,35 @@
         arr.push("C", 0)
         return arr
     }
+
+    const acceptItem = () => {
+        boughtItem = undefined;
+        command = "";
+    }
 </script>
 
 <div class="h-full w-full relative overflow-hidden">
     <enhanced:img src='$lib/VendingMachine.svg?enhanced' alt="da vending machine" class="w-[1250px] absolute -top-[120px] left-1/2 transform -translate-x-1/2"/>
-    <div class="absolute top-[80px] left-[420px] w-[800px] h-[310px] flex flex-col justify-between">
-        <div class="h-[85%] w-[150px] flex justify-center items-end">
-            <img src={items[1].thumbnail} class="w-full"/>
-        </div>
-        <div class="h-[15%] w-[150px] flex justify-center items-center">
-            <div class="w-1/3 h-full bg-white flex items-center justify-center text-xl font-bold">
-                55
+    <div class="absolute top-[80px] left-[420px] w-[800px] h-[310px] flex justify-between">
+        {#each items as item}
+            <div>
+                <div class="h-[85%] w-[150px] flex justify-center items-end">
+                    <img src={item.thumbnail} class="w-full"/>
+                </div>
+                <div class="h-[15%] w-[150px] flex justify-center items-center">
+                    <div class="w-1/3 h-full bg-white flex items-center justify-center text-xl font-bold">
+                        {item.vending_id}
+                    </div>
+                    <div class="w-1/3 h-full flex items-center justify-center text-md bg-neutral-600 text-white font-bold">
+                        {item.price}$
+                    </div> 
+                </div>
             </div>
-            <div class="w-1/3 h-full flex items-center justify-center text-xl bg-neutral-600 text-white font-bold">
-                1.99$
-            </div> 
-        </div>
+        {/each}
+
     </div>
+
+    <!--NUMPAD-->
     <div class="screen-font absolute w-[276px] h-[70px] bg-lime-200 top-[180px] left-[1267px] box-border p-6 text-4xl flex justify-end items-center border-2 border-neutral-500">
         {command}
     </div>
@@ -59,6 +78,16 @@
             {/each}
         </div>
     </div>
+    <!--NUMPAD END-->
+
+    {#if boughtItem && boughtItem !== null}
+        <div class="absolute flex flex-col justify-center items-center gap-16 w-full h-full top-0 left-0 bg-neutral-800 bg-opacity-60 backdrop-blur-md">
+            <div class="animate-scale">
+                <img src={`${boughtItem.thumbnail}`} alt="boughtItem" class="w-[250px] h-auto animate-glow"/>
+            </div>
+            <button class="rounded-md bg-neutral-400 px-5 py-2 text-white" on:click={acceptItem}>Accept item</button>
+        </div>
+    {/if}
 </div>
 
 <style>

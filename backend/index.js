@@ -1,9 +1,13 @@
 const express = require('express')
 const app = express()
 const port = 3000
+const cors = require('cors')
 const PocketBase = require('pocketbase/cjs')
 require('dotenv').config()
 const pb = new PocketBase(process.env.PB_URL)
+
+
+app.use(cors())
 
 app.get('/products', async (req, res) => {
 	const products = (await pb.collection('products').getFullList()).map(p => {
@@ -16,17 +20,14 @@ app.get('/products', async (req, res) => {
 })
 
 app.post('/buy/:product_id', async (req, res) => {
-	const products = (await pb.collection('products').getFullList()).map(p => {
-		p.thumbnail = `${process.env.PB_URL}/api/files/products/${p.id}/${p.thumbnail}`
-		return p
-	})
+	// TODO FIND ITEM
 	const delay = ms => new Promise(res => setTimeout(res, ms));
   	delay(5000)
 	res.send({success: true})
 })
 
 app.listen(port, async() => {
-	_= await pb.admins.authWithPassword(process.env.EMAIL, process.env.PASSWORD)
+	_ = await pb.admins.authWithPassword(process.env.EMAIL, process.env.PASSWORD)
 	if(!pb.authStore.isValid) {
 		console.log('Invalid PocketBase Authentification')
 		app.close()
